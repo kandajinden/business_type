@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* ========================================
+   ビジネス戦闘力診断 v2 - デザインシステム
+   正本: design.md §2, §4, §5, §6
+   ======================================== */
+
+@theme {
+  /* === カラーパレット (design.md §2) === */
+  --color-bg-white: #FFFFFF;
+  --color-accent: #E84715;
+  --color-accent-hover: #D03D12;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #555555;
+  --color-section-dark: #1A1A1A;
+  --color-section-dark-text: #FFFFFF;
+  --color-border: #E0E0E0;
+  --color-chart-fill: oklch(from #E84715 l c h / 20%);
+  --color-chart-line: #E84715;
+  --color-chart-grid: #CCCCCC;
+  --color-bar-filled: #E84715;
+  --color-bar-empty: #E0E0E0;
+
+  /* === 禁止カラー (design.md §2) ===
+   * #00FF41 (スカウターグリーン) - v1世界観。使用禁止
+   * #0A0E1A (ダークネイビー)     - v1背景色。使用禁止
+   * #FF0000 (原色の赤)           - オレンジと被る。使用禁止
+   */
+
+  /* === ランクカラー (design.md §7) === */
+  --color-rank-awakening: #999999;
+  --color-rank-potential-bg: #E3F2FD;
+  --color-rank-potential-text: #1976D2;
+  --color-rank-capable-border: #1A1A1A;
+  --color-rank-elite-bg: #FFF3E0;
+  --color-rank-elite-text: #E65100;
+  --color-rank-runner: #E84715;
+  --color-rank-legend: #1A1A1A;
+
+  /* === フォント (design.md §4) === */
+  --font-mono: "JetBrains Mono", "SF Mono", "Consolas", monospace;
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+/* === グローバルリセット === */
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === セクション配色パターン (design.md §6) === */
+.section-white {
+  background-color: var(--color-bg-white);
+  color: var(--color-text-primary);
+}
+
+.section-dark {
+  background-color: var(--color-section-dark);
+  color: var(--color-section-dark-text);
+}
+
+/* === ボタン (design.md §5) === */
+.btn-primary {
+  background-color: var(--color-accent);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--color-bg-white);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-text-primary);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* === 戦闘力数字 (design.md §4) === */
+.power-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* === プログレスバー === */
+.progress-bar {
+  background-color: var(--color-bar-empty);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background-color: var(--color-bar-filled);
+  height: 100%;
+  transition: width 0.3s ease;
+}

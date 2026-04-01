@@ -12,11 +12,17 @@ import {
   WinStyleType,
   BasicType,
   Polarity,
+  SuitableJob,
+  PotentialAction,
+  PotentialBattlePower,
   JOB_MAPPING,
   AXIS_LABELS,
+  JobCategory,
 } from "@/types";
 import { getRank, calculatePercentileRank } from "@/data/ranks";
 import { WIN_STYLES } from "@/data/winStyles";
+import { JOB_MASTER, getInputJobBonus } from "@/data/jobMaster";
+import { AXIS_ACTION_TEMPLATES, WIN_STYLE_ACTION_TEMPLATES } from "@/data/actionTemplates";
 
 // ------------------------------------------
 // 1. 6軸素点集計 (requirements_v2.md §8)
@@ -142,7 +148,7 @@ export function calculateReliability(
   sliderAnswers: { sl2?: number; sl4?: number; sl5?: number },
   q27Match: boolean,
   q29Answer?: string
-): { score: number; message: string } {
+): { score: number; message: string; contradictionCount: number } {
   let contradictions = 0;
 
   // 5択ペアの矛盾チェック
@@ -185,10 +191,12 @@ export function calculateReliability(
   // 補正
   let score = Math.max(1, 10 - contradictions);
   if (q27Match) score = Math.min(10, score + 1);
+
+  // Q29: v2 では 4択（A/B/C/D）。旧Eは廃止、旧Eの+2がDに移行
+  // A = ボーナスなし, B = +1, C = -1, D = +2
   if (q29Answer === "B") score = Math.min(10, score + 1);
   if (q29Answer === "C") score = Math.max(1, score - 1);
-  if (q29Answer === "D") score = Math.max(1, score - 2);
-  if (q29Answer === "E") score = Math.min(10, score + 2);
+  if (q29Answer === "D") score = Math.min(10, score + 2);
 
   const messages: Record<number, string> = {
     10: "鉄壁の自己認識。あなたは自分が何者かを完全に理解している",
@@ -203,7 +211,7 @@ export function calculateReliability(
     1: "要キャリブレーション",
   };
 
-  return { score, message: messages[score] || "" };
+  return { score, message: messages[score] || "", contradictionCount: contradictions };
 }
 
 // ------------------------------------------
@@ -305,69 +313,142 @@ export function determineWinStyle(
 }
 
 // ------------------------------------------
-// 6. ポテンシャル年収 (スコア計算ロジック_詳細.md §6)
+// 6. 向いている職種 (requirements_v2.md §11-2b)
 // ------------------------------------------
 
-export function calculatePotentialSalary(
-  rawTotal: number,
-  age: number,
-  job: string,
-  q26Answer?: string,
-  sl3Value?: number
-): { min: number; max: number } {
-  // ベース年収
-  const baseSalary = 300 + (rawTotal / 600) * 1200;
+export function calculateSuitableJobs(
+  normalized: AxisScores,
+  winStyleId: WinStyleType,
+  inputJob: JobCategory
+): [SuitableJob, SuitableJob, SuitableJob] {
+  const axes: AxisKey[] = ["L", "C", "G", "A", "I", "E"];
 
-  // 年齢係数
-  const ageCoef =
-    age <= 24 ? 0.55 :
-    age <= 27 ? 0.70 :
-    age <= 30 ? 0.85 :
-    age <= 33 ? 1.00 : 1.10;
+  const scored = JOB_MASTER.map((job) => {
+    // fit_score = Σ(正規化スコア × required_axes重み) + type_bonus + input_job_bonus
+    let axisScore = 0;
+    for (const axis of axes) {
+      axisScore += normalized[axis] * job.requiredAxes[axis];
+    }
 
-  const ageAdjusted = baseSalary * ageCoef;
+    const typeBonus = job.typeBonuses[winStyleId] || 0;
+    const inputJobBonus = getInputJobBonus(inputJob, job.category);
+    const fitScore = axisScore + typeBonus + inputJobBonus;
 
-  // 職種係数
-  const jobCoef = JOB_MAPPING[job as keyof typeof JOB_MAPPING]?.salaryCoefficient || 1.0;
-  const jobAdjusted = ageAdjusted * jobCoef;
+    const reason = job.reasonTemplates[winStyleId] || "";
 
-  // Q26補正
-  const q26Coef =
-    q26Answer === "A" ? 1.3 :
-    q26Answer === "B" ? 1.1 :
-    q26Answer === "D" ? 0.9 : 1.0;
-  const q26Adjusted = jobAdjusted * q26Coef;
+    return {
+      name: job.name,
+      reason,
+      fitScore,
+      typeBonus,
+      inputJobBonus,
+    };
+  });
 
-  // SL3補正（レンジ幅）
-  const sl3 = sl3Value ?? 50;
-  let salaryMin: number, salaryMax: number;
+  // ソート: fitScore降順 → typeBonus降順 → inputJobBonus降順 → マスタ定義順
+  scored.sort((a, b) => {
+    if (b.fitScore !== a.fitScore) return b.fitScore - a.fitScore;
+    if (b.typeBonus !== a.typeBonus) return b.typeBonus - a.typeBonus;
+    if (b.inputJobBonus !== a.inputJobBonus) return b.inputJobBonus - a.inputJobBonus;
+    return 0; // マスタ定義順を維持
+  });
 
-  if (sl3 <= 25) {
-    salaryMin = q26Adjusted - 50;
-    salaryMax = q26Adjusted + 50;
-  } else if (sl3 <= 50) {
-    salaryMin = q26Adjusted - 100;
-    salaryMax = q26Adjusted + 100;
-  } else if (sl3 <= 75) {
-    salaryMin = q26Adjusted * 0.8;
-    salaryMax = q26Adjusted * 1.3;
-  } else {
-    salaryMin = q26Adjusted * 0.6;
-    salaryMax = q26Adjusted * 1.8;
-  }
+  // 上位3件を返す
+  const top3 = scored.slice(0, 3).map((s) => ({
+    name: s.name,
+    reason: s.reason,
+    fitScore: Math.round(s.fitScore),
+  }));
 
-  // 10万円単位に丸める
-  salaryMin = Math.round(Math.max(200, salaryMin) / 10) * 10;
-  salaryMax = Math.round(Math.max(salaryMin + 50, salaryMax) / 10) * 10;
-
-  return { min: salaryMin, max: salaryMax };
+  return top3 as [SuitableJob, SuitableJob, SuitableJob];
 }
 
 // ------------------------------------------
-// 7. 中間フィードバック (requirements_v2.md §6-0c)
+// 7. ポテンシャル戦闘力 (requirements_v2.md §11-2c)
 // ------------------------------------------
 
-export function calculateInterimPower(partialAnswers: Answer[], questions: any[]): number {
+export function calculatePotentialBattlePower(
+  normalized: AxisScores,
+  reliability: number,
+  currentBattlePower: number,
+  winStyleId: WinStyleType
+): PotentialBattlePower {
+  const axes: AxisKey[] = ["L", "C", "G", "A", "I", "E"];
+
+  // 1. 伸びしろ上位2軸を抽出（スコアが低い上位2軸）
+  const sortedByScore = axes
+    .map((key) => ({ key, score: normalized[key] }))
+    .sort((a, b) => a.score - b.score);
+
+  const weakest1 = sortedByScore[0];
+  const weakest2 = sortedByScore[1];
+
+  // 2. +12 ブーストした正規化スコアを作成
+  const boosted: AxisScores = { ...normalized };
+  boosted[weakest1.key] = Math.min(100, boosted[weakest1.key] + 12);
+  boosted[weakest2.key] = Math.min(100, boosted[weakest2.key] + 12);
+
+  // 3. ブースト後の戦闘力を再計算
+  const potentialPower = calculateBattlePower(boosted, reliability);
+
+  // 4. 成長率
+  const growthPercent = Math.round((potentialPower / currentBattlePower - 1) * 100);
+
+  // 5. 3つのアクションを構築
+  const action1: PotentialAction = {
+    label: AXIS_ACTION_TEMPLATES[weakest1.key].label,
+    description: AXIS_ACTION_TEMPLATES[weakest1.key].description,
+    axisKey: weakest1.key,
+    before: weakest1.score,
+    after: Math.min(100, weakest1.score + 12),
+  };
+
+  const action2: PotentialAction = {
+    label: AXIS_ACTION_TEMPLATES[weakest2.key].label,
+    description: AXIS_ACTION_TEMPLATES[weakest2.key].description,
+    axisKey: weakest2.key,
+    before: weakest2.score,
+    after: Math.min(100, weakest2.score + 12),
+  };
+
+  const winStyleAction = WIN_STYLE_ACTION_TEMPLATES[winStyleId];
+  const action3: PotentialAction = {
+    label: winStyleAction.label,
+    description: winStyleAction.description,
+  };
+
+  return {
+    current: currentBattlePower,
+    potential: potentialPower,
+    growthPercent,
+    actions: [action1, action2, action3],
+  };
+}
+
+// ------------------------------------------
+// 8. 中間フィードバック (requirements_v2.md §6-0c)
+// ------------------------------------------
+
+/**
+ * sessionId をシードとした簡易ハッシュベースの疑似乱数を生成する。
+ * 同じ sessionId なら必ず同じ値を返す（決定的）。
+ */
+function seededRandom(sessionId: string): number {
+  let hash = 0;
+  for (let i = 0; i < sessionId.length; i++) {
+    const char = sessionId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // 32bit整数に変換
+  }
+  // 0〜1 の範囲に正規化（符号を除去して割る）
+  return (Math.abs(hash) % 10000) / 10000;
+}
+
+export function calculateInterimPower(
+  partialAnswers: Answer[],
+  questions: any[],
+  sessionId: string
+): number {
   const raw = calculateRawScores(partialAnswers, questions);
   // ×2で30問分に外挿
   const extrapolated: AxisScores = {
@@ -379,13 +460,13 @@ export function calculateInterimPower(partialAnswers: Answer[], questions: any[]
     normalized.L + normalized.C + normalized.G +
     normalized.A + normalized.I + normalized.E;
   const basePower = 5000 * Math.pow(rawTotal / 100, 2.5);
-  // ±20%のランダム揺らぎ
-  const variation = 0.8 + Math.random() * 0.4;
+  // ±20%のシードベース揺らぎ（同じsessionIdなら同じ結果）
+  const variation = 0.8 + seededRandom(sessionId) * 0.4;
   return Math.round(Math.max(5000, basePower * variation));
 }
 
 // ------------------------------------------
-// 8. 総合結果算出
+// 9. 総合結果算出
 // ------------------------------------------
 
 export function calculateFullResult(
@@ -401,11 +482,9 @@ export function calculateFullResult(
     answers.find((a) => a.questionId === qId)?.sliderValue;
 
   const sl2 = getSlider("Q10") ?? 50;
-  const sl3 = getSlider("Q15") ?? 50;
   const sl4 = getSlider("Q20") ?? 50;
 
-  // Q26, Q27, Q28, Q29 の回答取得
-  const q26 = answers.find((a) => a.questionId === "Q26")?.selectedOption;
+  // Q27, Q28, Q29 の回答取得
   const q27 = answers.find((a) => a.questionId === "Q27")?.selectedOption;
   const q28 = answers.find((a) => a.questionId === "Q28")?.selectedOption;
   const q29 = answers.find((a) => a.questionId === "Q29")?.selectedOption;
@@ -423,8 +502,8 @@ export function calculateFullResult(
   };
   const q27Match = q27 ? q27BasicTypeMap[q27] === winStyle.basicType : false;
 
-  // 信頼度
-  const { score: reliability, message: reliabilityMessage } = calculateReliability(
+  // 信頼度（v2: contradictionCount も返す）
+  const { score: reliability, message: reliabilityMessage, contradictionCount } = calculateReliability(
     answers, questions,
     { sl2, sl4, sl5: getSlider("Q25") },
     q27Match, q29
@@ -439,15 +518,25 @@ export function calculateFullResult(
   // 上位%
   const percentileRank = calculatePercentileRank(battlePower, profile.age);
 
-  // ポテンシャル年収
-  const rawTotal = normalized.L + normalized.C + normalized.G + normalized.A + normalized.I + normalized.E;
-  const salary = calculatePotentialSalary(rawTotal, profile.age, profile.job, q26, sl3);
+  // 上位%の表示条件: 50%以下のみ表示 (requirements_v2.md §10-2)
+  const showPercentile = percentileRank <= 50;
+
+  // 向いている職種 (v2 正式実装)
+  const suitableJobs = calculateSuitableJobs(normalized, winStyleId, profile.job as JobCategory);
+
+  // ポテンシャル戦闘力 (v2 正式実装)
+  const potentialBattlePower = calculatePotentialBattlePower(
+    normalized, reliability, battlePower, winStyleId
+  );
 
   // 最強の武器・伸びしろ
   const axisEntries = (Object.entries(normalized) as [AxisKey, number][])
     .sort((a, b) => b[1] - a[1]);
   const strongest = axisEntries[0];
   const weakest = axisEntries[axisEntries.length - 1];
+
+  // barnumSensitivity: v2では4択 (A/B/C/D) のみ。Eは廃止
+  const validBarnum = (q28 === "A" || q28 === "B" || q28 === "C" || q28 === "D") ? q28 : "C";
 
   return {
     axisScores: raw,
@@ -458,10 +547,12 @@ export function calculateFullResult(
     reliability,
     reliabilityMessage,
     percentileRank,
-    potentialSalaryMin: salary.min,
-    potentialSalaryMax: salary.max,
+    showPercentile,
+    suitableJobs,
+    potentialBattlePower,
     strongestAxis: { key: strongest[0], label: AXIS_LABELS[strongest[0]], score: strongest[1] },
     weakestAxis: { key: weakest[0], label: AXIS_LABELS[weakest[0]], score: weakest[1] },
-    barnumSensitivity: (q28 as "A" | "B" | "C" | "D" | "E") || "C",
+    barnumSensitivity: validBarnum,
+    contradictionCount,
   };
 }

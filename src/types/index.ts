@@ -126,6 +126,31 @@ export interface AxisScores {
   E: number;
 }
 
+// --- 向いている職種 (requirements_v2.md §11-2b) ---
+
+export interface SuitableJob {
+  name: string;
+  reason: string;
+  fitScore: number;
+}
+
+// --- ポテンシャル戦闘力 (requirements_v2.md §11-2c) ---
+
+export interface PotentialAction {
+  label: string;       // 例: 「戦略思考」を強化する
+  description: string; // 例: 週1回、自分の仕事の「優先順位」を紙に書き出す
+  axisKey?: AxisKey;   // 紐づく軸（3つ目は勝ち筋固有で軸なし）
+  before?: number;     // 現在のスコア
+  after?: number;      // 推定改善スコア
+}
+
+export interface PotentialBattlePower {
+  current: number;
+  potential: number;
+  growthPercent: number; // (potential/current - 1) * 100
+  actions: [PotentialAction, PotentialAction, PotentialAction];
+}
+
 export interface DiagnosisResult {
   axisScores: AxisScores;
   normalizedScores: AxisScores;
@@ -134,12 +159,14 @@ export interface DiagnosisResult {
   winStyle: WinStyleInfo;
   reliability: number;
   reliabilityMessage: string;
-  percentileRank: number; // 同年代上位%
-  potentialSalaryMin: number;
-  potentialSalaryMax: number;
+  percentileRank: number;        // 同年代上位%
+  showPercentile: boolean;       // 50%以下のみ表示 (requirements_v2.md §10-2)
+  suitableJobs: [SuitableJob, SuitableJob, SuitableJob]; // 向いている職種3つ
+  potentialBattlePower: PotentialBattlePower;             // ポテンシャル戦闘力
   strongestAxis: { key: AxisKey; label: string; score: number };
   weakestAxis: { key: AxisKey; label: string; score: number };
-  barnumSensitivity: "A" | "B" | "C" | "D" | "E";
+  barnumSensitivity: "A" | "B" | "C" | "D";  // v2: 4択化 (E廃止)
+  contradictionCount: number;                 // 矛盾ペア数 (低感受性表示用)
 }
 
 // --- ユーザー入力 ---
@@ -152,7 +179,7 @@ export interface UserProfile {
 
 export interface Answer {
   questionId: string;
-  selectedOption?: string; // choice問の選択肢ラベル (A,B,C,D,E)
+  selectedOption?: string; // choice問の選択肢ラベル (A,B,C,D) v2: 4択
   sliderValue?: number;    // slider問の値 (0-100)
   answerTimeMs: number;
   dragCount?: number;      // slider問のドラッグ回数

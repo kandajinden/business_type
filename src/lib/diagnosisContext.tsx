@@ -11,6 +11,7 @@ interface DiagnosisState {
   answers: Answer[];
   currentQuestion: number;
   result: DiagnosisResult | null;
+  sessionId: string;
   setPhase: (phase: DiagnosisPhase) => void;
   setProfile: (profile: UserProfile) => void;
   addAnswer: (answer: Answer) => void;
@@ -27,6 +28,9 @@ export function DiagnosisProvider({ children }: { children: ReactNode }) {
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [result, setResult] = useState<DiagnosisResult | null>(null);
+  const [sessionId] = useState(() =>
+    `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`
+  );
 
   const addAnswer = (answer: Answer) => {
     setAnswers((prev) => {
@@ -51,7 +55,7 @@ export function DiagnosisProvider({ children }: { children: ReactNode }) {
   return (
     <DiagnosisContext.Provider
       value={{
-        phase, profile, answers, currentQuestion, result,
+        phase, profile, answers, currentQuestion, result, sessionId,
         setPhase, setProfile, addAnswer, setCurrentQuestion, setResult, reset,
       }}
     >

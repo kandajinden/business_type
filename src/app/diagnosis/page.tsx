@@ -14,7 +14,7 @@ import { useState, useMemo, useCallback } from "react";
 
 export default function DiagnosisPage() {
   const {
-    phase, profile, answers, currentQuestion, result,
+    phase, profile, answers, currentQuestion, result, sessionId,
     setPhase, setProfile, addAnswer, setCurrentQuestion, setResult,
   } = useDiagnosis();
 
@@ -90,7 +90,7 @@ export default function DiagnosisPage() {
 
   // 2. 中間フィードバック
   if (showInterim && phase === "questions") {
-    const interimPower = calculateInterimPower(answers, questions);
+    const interimPower = calculateInterimPower(answers, questions, sessionId);
     return (
       <InterimFeedback
         interimPower={interimPower}
@@ -145,8 +145,6 @@ export default function DiagnosisPage() {
     return (
       <ResultPage
         result={result}
-        age={profile.age}
-        gender={profile.gender}
       />
     );
   }

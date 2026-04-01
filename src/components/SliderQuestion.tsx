@@ -8,10 +8,12 @@ interface Props {
   totalQuestions: number;
   progress: number;
   isLast: boolean;
+  estimatedPower: number | null;
+  showMeasuring: boolean;
   onAnswer: (value: number, timeMs: number, dragCount: number) => void;
 }
 
-export default function SliderQuestion({ question, totalQuestions, progress, isLast, onAnswer }: Props) {
+export default function SliderQuestion({ question, totalQuestions, progress, isLast, estimatedPower, showMeasuring, onAnswer }: Props) {
   const [value, setValue] = useState(50);
   const [hasDragged, setHasDragged] = useState(false);
   const [dragCount, setDragCount] = useState(0);
@@ -39,6 +41,20 @@ export default function SliderQuestion({ question, totalQuestions, progress, isL
 
   return (
     <div className="min-h-[80vh] flex flex-col px-4 pt-4 pb-24">
+      {/* 推定戦闘力表示 (requirements_v2.md §6-0c) */}
+      <div className="w-full max-w-md mx-auto mb-2 text-center">
+        <p className="text-xs text-[#555555]">現時点での推定キャリア戦闘力</p>
+        {showMeasuring ? (
+          <p className="text-sm font-bold text-[#E84715]">計測中</p>
+        ) : estimatedPower ? (
+          <p className="power-number text-base text-[#E84715]">
+            {estimatedPower.toLocaleString()}
+          </p>
+        ) : (
+          <p className="text-sm text-[#E0E0E0]">──</p>
+        )}
+      </div>
+
       {/* プログレスバー */}
       <div className="w-full max-w-md mx-auto mb-2">
         <div className="progress-bar h-2">

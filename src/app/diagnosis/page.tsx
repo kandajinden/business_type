@@ -36,6 +36,16 @@ export default function DiagnosisPage() {
     return total;
   }, [currentQuestion, questions]);
 
+  // 推定戦闘力 (requirements_v2.md §6-0c)
+  // Q1〜Q10: リアルタイム数値表示 / Q11〜Q30: 「計測中」
+  const estimatedPower = useMemo(() => {
+    if (!currentQ) return null;
+    const qNum = currentQ.number;
+    if (qNum > 10) return null; // Q11以降は「計測中」
+    if (answers.length === 0) return null; // 回答0問なら非表示
+    return calculateInterimPower(answers, questions, sessionId);
+  }, [currentQ, answers, questions, sessionId]);
+
   // プロフィール送信
   const handleProfileSubmit = useCallback((p: UserProfile) => {
     setProfile(p);
@@ -112,6 +122,8 @@ export default function DiagnosisPage() {
           totalQuestions={questions.length}
           progress={progress}
           isLast={currentQuestion >= questions.length}
+          estimatedPower={estimatedPower}
+          showMeasuring={currentQ.number > 10}
           onAnswer={(value, timeMs, dragCount) =>
             handleAnswer(currentQ, value, timeMs, dragCount)
           }
@@ -125,6 +137,8 @@ export default function DiagnosisPage() {
         question={currentQ}
         totalQuestions={questions.length}
         progress={progress}
+        estimatedPower={estimatedPower}
+        showMeasuring={currentQ.number > 10}
         onAnswer={(label, timeMs) => handleAnswer(currentQ, label, timeMs)}
       />
     );

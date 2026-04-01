@@ -7,10 +7,12 @@ interface Props {
   question: Question;
   totalQuestions: number;
   progress: number;
+  estimatedPower: number | null;  // Q1-Q10: 推定戦闘力 / Q11-Q30: null
+  showMeasuring: boolean;         // Q11以降は「計測中」表示
   onAnswer: (optionLabel: string, timeMs: number) => void;
 }
 
-export default function ChoiceQuestion({ question, totalQuestions, progress, onAnswer }: Props) {
+export default function ChoiceQuestion({ question, totalQuestions, progress, estimatedPower, showMeasuring, onAnswer }: Props) {
   const [selected, setSelected] = useState<string | null>(null);
   const [startTime] = useState(Date.now());
 
@@ -25,6 +27,20 @@ export default function ChoiceQuestion({ question, totalQuestions, progress, onA
 
   return (
     <div className="min-h-[80vh] flex flex-col px-4 pt-4 pb-24">
+      {/* 推定戦闘力表示 (requirements_v2.md §6-0c) */}
+      <div className="w-full max-w-md mx-auto mb-2 text-center">
+        <p className="text-xs text-[#555555]">現時点での推定キャリア戦闘力</p>
+        {showMeasuring ? (
+          <p className="text-sm font-bold text-[#E84715]">計測中</p>
+        ) : estimatedPower ? (
+          <p className="power-number text-base text-[#E84715]">
+            {estimatedPower.toLocaleString()}
+          </p>
+        ) : (
+          <p className="text-sm text-[#E0E0E0]">──</p>
+        )}
+      </div>
+
       {/* プログレスバー */}
       <div className="w-full max-w-md mx-auto mb-2">
         <div className="progress-bar h-2">

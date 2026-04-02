@@ -63,7 +63,7 @@ export default function AnalyzingAnimation({ battlePower, onComplete }: Props) {
       {/* 数字カウントアップ */}
       {(phase === "counting" || phase === "done") && (
         <div className="text-center">
-          <p className="text-sm text-[#555555] mb-2">ビジネス戦闘力</p>
+          <p className="text-sm text-[#555555] mb-2">キャリア戦闘力</p>
           <p
             className={`power-number text-5xl md:text-7xl text-[#1A1A1A] transition-transform ${
               phase === "done" ? "scale-110" : ""

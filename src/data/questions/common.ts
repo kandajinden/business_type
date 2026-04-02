@@ -161,9 +161,9 @@ export const COMMON_QUESTIONS: Question[] = [
   {
     id: "Q15", number: 15, type: "slider", category: "slider", progressWeight: 3,
     text: "",
-    sliderQuestion: "もし転職先を2つ提示されたら、どっちを選ぶ？",
-    sliderLeft: "確実に年収800万の会社",
-    sliderRight: "50%で年収2,000万、失敗したら400万の会社",
+    sliderQuestion: "自分のキャリア、どっちの方向に伸ばしたい？",
+    sliderLeft: "1つの武器を磨いて「この分野なら負けない」状態を作る",
+    sliderRight: "複数の武器を持って「どこでも戦える」状態を作る",
     sliderZones: [
       { min: 0, max: 25, scores: { G: 2, E: 2, I: -1 } },
       { min: 26, max: 50, scores: { G: 1, A: 1 } },

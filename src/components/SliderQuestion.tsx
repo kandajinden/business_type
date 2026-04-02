@@ -33,11 +33,14 @@ export default function SliderQuestion({ question, totalQuestions, progress, isL
     onAnswer(value, Date.now() - startTime, dragCount);
   };
 
-  // SL3 特殊表示（リスク選好度・期待値）
-  const isSL3 = question.number === 15;
-  const expectedSalary = isSL3
-    ? Math.round(400 + (value / 100) * 1200)
-    : null;
+  // 5段階ラベル（数値の代わりに表示）
+  const getPositionLabel = (v: number): string => {
+    if (v <= 15) return `完全に「${question.sliderLeft}」派`;
+    if (v <= 35) return `どちらかといえば「${question.sliderLeft}」`;
+    if (v <= 65) return "半々";
+    if (v <= 85) return `どちらかといえば「${question.sliderRight}」`;
+    return `完全に「${question.sliderRight}」派`;
+  };
 
   return (
     <div className="min-h-[80vh] flex flex-col px-4 pt-4 pb-24">
@@ -101,21 +104,11 @@ export default function SliderQuestion({ question, totalQuestions, progress, isL
           />
         </div>
 
-        {/* 数値表示 */}
-        <p className="text-center text-2xl font-bold text-[#1A1A1A] power-number mb-4">
-          {value}
-        </p>
-
-        {/* SL3 特殊表示 */}
-        {isSL3 && hasDragged && (
-          <div className="text-center space-y-1 mb-4">
-            <p className="text-sm text-[#E84715]">
-              リスク選好度：{value}%
-            </p>
-            <p className="text-sm font-bold text-[#1A1A1A]">
-              期待値：{expectedSalary}万円
-            </p>
-          </div>
+        {/* ポジションラベル（数値の代わりに5段階テキスト表示） */}
+        {hasDragged && (
+          <p className="text-center text-sm font-bold text-[#E84715] mb-4">
+            {getPositionLabel(value)}
+          </p>
         )}
       </div>
 

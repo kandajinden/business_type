@@ -278,31 +278,7 @@ export default function ResultPage({ result }: Props) {
         </div>
       </section>
 
-      {/* ===== セクション7: シェアボタン ===== */}
-      <section className="section-white py-8 px-4 border-t border-[#E0E0E0]">
-        <div className="max-w-md mx-auto text-center">
-          <p className="text-sm text-[#555555] mb-4">── 結果をシェア ──</p>
-          <div className="grid grid-cols-4 gap-3 mb-4">
-            <button className="btn-secondary py-3 rounded-lg text-sm">
-              𝕏
-            </button>
-            <button className="btn-secondary py-3 rounded-lg text-sm">
-              Insta
-            </button>
-            <button className="btn-secondary py-3 rounded-lg text-sm">
-              LINE
-            </button>
-            <button className="btn-secondary py-3 rounded-lg text-sm">
-              📷 保存
-            </button>
-          </div>
-          <p className="text-xs text-[#999999]">
-            シェア画像には年齢・性別・職種は含まれません
-          </p>
-        </div>
-      </section>
-
-      {/* ===== セクション8: LINE登録CTA ===== */}
+      {/* ===== セクション7: LINE登録CTA ===== */}
       <section className="section-dark py-12 px-4">
         <div className="max-w-md mx-auto text-center">
           <h3 className="text-lg font-bold text-white mb-2">

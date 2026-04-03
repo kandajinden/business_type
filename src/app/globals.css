@@ -144,6 +144,30 @@ body {
   100% { left: 150%; }
 }
 
+/* === CTA画像バナー用キラーンエフェクト === */
+.cta-shine {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.cta-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
 /* === フローティングバナー (design.md §9) === */
 .floating-cta {
   position: fixed;

@@ -330,12 +330,14 @@ export default function ResultPage({ result }: Props) {
             />
           </div>
 
-          {/* ─── CTAボタン1 ─── */}
-          <button className="btn-line w-full py-4 mb-8">
-            【無料】自分だけの勝ち筋を見つける
-            <br />
-            7つの質問ワークを受け取る
-          </button>
+          {/* ─── CTA画像ボタン① ─── */}
+          <a href="#line-register" className="block mb-8 cta-shine rounded-lg overflow-hidden">
+            <img
+              src={`${basePath}/images/cta-banner.png`}
+              alt="今だけ 無料でワークシートを受け取る"
+              className="w-full"
+            />
+          </a>
 
           {/* ─── 7つの質問ワーク詳細 ─── */}
           <div className="mb-8">
@@ -346,21 +348,21 @@ export default function ResultPage({ result }: Props) {
             />
           </div>
 
+          {/* ─── CTA画像ボタン② ─── */}
+          <a href="#line-register" className="block mb-8 cta-shine rounded-lg overflow-hidden">
+            <img
+              src={`${basePath}/images/cta-banner.png`}
+              alt="今だけ 無料でワークシートを受け取る"
+              className="w-full"
+            />
+          </a>
+
           {/* ─── 書籍の権威性 ─── */}
-          <div className="mb-8">
+          <div className="mb-6">
             <img
               src={`${basePath}/images/book-authority.png`}
               alt="初書籍『自分の変え方』Amazon 総合1位 / 7冠達成"
               className="w-full rounded-lg"
-            />
-          </div>
-
-          {/* ─── CTAバナー ─── */}
-          <div className="mb-8">
-            <img
-              src={`${basePath}/images/cta-banner.png`}
-              alt="今だけ 最短最速で人生を突き抜ける。無料でワークシートを受け取る"
-              className="w-full rounded-lg cursor-pointer"
             />
           </div>
 
@@ -382,19 +384,14 @@ export default function ResultPage({ result }: Props) {
             />
           </div>
 
-          {/* ─── 導入企業 ─── */}
-          <div className="mb-8">
+          {/* ─── CTA画像ボタン③ ─── */}
+          <a href="#line-register" className="block mb-3 cta-shine rounded-lg overflow-hidden">
             <img
-              src={`${basePath}/images/clients.png`}
-              alt="実際に変容を起こした企業様 docomo 埼玉西武ライオンズ ショップジャパン 西野亮廣"
-              className="w-full rounded-lg"
+              src={`${basePath}/images/cta-banner.png`}
+              alt="今だけ 無料でワークシートを受け取る"
+              className="w-full"
             />
-          </div>
-
-          {/* ─── 最終CTA ─── */}
-          <button className="btn-line w-full py-4 mb-3">
-            無料でワークシートを受け取る →
-          </button>
+          </a>
           <p className="text-[10px] text-[#555555]">
             ※1分で回答できるアンケートにご回答いただいた方に特典を配布しています。
           </p>

@@ -12,15 +12,6 @@ const RANK_DISTRIBUTION = [
   { name: "原石", percent: 5, scoreRange: "5,000〜" },
 ];
 
-// サンプルレーダーチャートの軸スコア
-const SAMPLE_SCORES = [
-  { label: "決断力", score: 82 },
-  { label: "巻き込み", score: 71 },
-  { label: "継続力", score: 55 },
-  { label: "戦略思考", score: 48 },
-  { label: "突破力", score: 60 },
-  { label: "実行速度", score: 67 },
-];
 
 export default function LandingPage() {
   return (
@@ -83,33 +74,6 @@ export default function LandingPage() {
             <br />
             あなたの戦闘力は？
           </p>
-
-          {/* 結果サンプルカード */}
-          <p className="text-base font-bold text-[#1A1A1A] text-center mb-4">
-            ── こんな結果が出る ──
-          </p>
-
-          <div className="bg-[#1A1A1A] rounded-2xl p-6 text-white mb-6">
-            <p className="text-xs text-[#E84715] font-bold mb-1">
-              勝ち筋タイプ
-            </p>
-            <h3 className="text-xl font-bold mb-2">求心力型</h3>
-            <p className="text-sm text-[#CCCCCC] mb-4">
-              「ビジョンで人を動かし、
-              <br />
-              大きな成果を生み出す」
-            </p>
-
-            {/* ミニレーダーチャート代替: テキストでスコア表示 */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              {SAMPLE_SCORES.map((s) => (
-                <div key={s.label} className="flex justify-between">
-                  <span className="text-[#CCCCCC]">{s.label}</span>
-                  <span className="text-[#E84715] font-bold">{s.score}</span>
-                </div>
-              ))}
-            </div>
-          </div>
 
           <p className="text-sm text-[#555555] text-center leading-relaxed">
             あなたの「勝ち筋」と

@@ -11,11 +11,11 @@ interface Props {
 // ランク分布データ（LP / 結果画面共通）
 const RANK_DISTRIBUTION = [
   { id: "legend", name: "伝説", percent: 2 },
-  { id: "runner", name: "トップランナー", percent: 11 },
-  { id: "elite", name: "精鋭", percent: 22 },
-  { id: "capable", name: "実力者", percent: 40 },
-  { id: "potential", name: "潜在戦力", percent: 20 },
-  { id: "awakening", name: "覚醒前", percent: 5 },
+  { id: "runner", name: "覇者", percent: 11 },
+  { id: "elite", name: "猛者", percent: 22 },
+  { id: "capable", name: "実戦派", percent: 40 },
+  { id: "potential", name: "挑戦者", percent: 20 },
+  { id: "awakening", name: "原石", percent: 5 },
 ];
 
 export default function ResultPage({ result }: Props) {

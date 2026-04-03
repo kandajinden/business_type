@@ -5,11 +5,11 @@ import Link from "next/link";
 // ランク分布データ（design.md §9 / requirements_v2.md §12-2b）
 const RANK_DISTRIBUTION = [
   { name: "伝説", percent: 2, scoreRange: "1,000,000〜" },
-  { name: "トップランナー", percent: 11, scoreRange: "300,000〜" },
-  { name: "精鋭", percent: 22, scoreRange: "100,000〜" },
-  { name: "実力者", percent: 40, scoreRange: "30,000〜" },
-  { name: "潜在戦力", percent: 20, scoreRange: "10,000〜" },
-  { name: "覚醒前", percent: 5, scoreRange: "5,000〜" },
+  { name: "覇者", percent: 11, scoreRange: "300,000〜" },
+  { name: "猛者", percent: 22, scoreRange: "100,000〜" },
+  { name: "実戦派", percent: 40, scoreRange: "30,000〜" },
+  { name: "挑戦者", percent: 20, scoreRange: "10,000〜" },
+  { name: "原石", percent: 5, scoreRange: "5,000〜" },
 ];
 
 // サンプルレーダーチャートの軸スコア

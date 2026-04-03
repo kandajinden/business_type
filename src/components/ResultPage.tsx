@@ -187,33 +187,29 @@ export default function ResultPage({ result }: Props) {
         </>
       )}
 
-      {/* ===== セクション4: 向いている職種 ===== */}
+      {/* ===== セクション4: この勝ち筋が活きる場面 ===== */}
       <section className="section-white py-12 px-4 border-t border-[#E0E0E0]">
         <div className="max-w-md mx-auto">
           <p className="text-sm text-[#555555] text-center mb-6">
-            ── あなたに向いている職種 ──
+            ── この勝ち筋が活きる場面 ──
           </p>
           <div className="space-y-6">
-            {result.suitableJobs.map((job, i) => (
+            {result.bestScenes.map((scene, i) => (
               <div key={i} className="flex gap-3">
                 <span className="text-[#E84715] font-bold text-sm flex-shrink-0 mt-0.5">
                   {"①②③"[i]}
                 </span>
                 <div>
                   <p className="text-base font-bold text-[#1A1A1A] mb-1">
-                    {job.name}
+                    {scene.title}
                   </p>
                   <p className="text-sm text-[#555555] leading-relaxed">
-                    {job.reason}
+                    {scene.reason}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-          <p className="text-xs text-[#999999] mt-4 text-center">
-            ※
-            勝ち筋タイプ・成果加速マップの6軸スコア・回答内容を総合的に分析して判定
-          </p>
         </div>
       </section>
 

@@ -12,16 +12,15 @@ import {
   WinStyleType,
   BasicType,
   Polarity,
-  SuitableJob,
+  BestScene,
   PotentialAction,
   PotentialBattlePower,
   JOB_MAPPING,
   AXIS_LABELS,
-  JobCategory,
 } from "@/types";
 import { getRank, calculatePercentileRank } from "@/data/ranks";
 import { WIN_STYLES } from "@/data/winStyles";
-import { JOB_MASTER, getInputJobBonus } from "@/data/jobMaster";
+
 import { AXIS_ACTION_TEMPLATES, WIN_STYLE_ACTION_TEMPLATES } from "@/data/actionTemplates";
 
 // ------------------------------------------
@@ -313,54 +312,47 @@ export function determineWinStyle(
 }
 
 // ------------------------------------------
-// 6. 向いている職種 (requirements_v2.md §11-2b)
+// 6. 勝ち筋が活きる場面
+// ロジック: 上位2軸の場面 + タイプ固有の場面 = 3つ
 // ------------------------------------------
 
-export function calculateSuitableJobs(
+import { SCENE_BY_TYPE_AND_AXIS, TYPE_FIXED_SCENE } from "@/data/sceneTemplates";
+
+export function calculateBestScenes(
   normalized: AxisScores,
   winStyleId: WinStyleType,
-  inputJob: JobCategory
-): [SuitableJob, SuitableJob, SuitableJob] {
+): [BestScene, BestScene, BestScene] {
   const axes: AxisKey[] = ["L", "C", "G", "A", "I", "E"];
 
-  const scored = JOB_MASTER.map((job) => {
-    // fit_score = Σ(正規化スコア × required_axes重み) + type_bonus + input_job_bonus
-    let axisScore = 0;
-    for (const axis of axes) {
-      axisScore += normalized[axis] * job.requiredAxes[axis];
-    }
+  // 上位2軸を取得
+  const sortedAxes = axes
+    .map((key) => ({ key, score: normalized[key] }))
+    .sort((a, b) => b.score - a.score);
 
-    const typeBonus = job.typeBonuses[winStyleId] || 0;
-    const inputJobBonus = getInputJobBonus(inputJob, job.category);
-    const fitScore = axisScore + typeBonus + inputJobBonus;
+  const top1 = sortedAxes[0].key;
+  const top2 = sortedAxes[1].key;
 
-    const reason = job.reasonTemplates[winStyleId] || "";
+  // タイプ別の場面テンプレートから、上位軸に対応する場面を取得
+  const templates = SCENE_BY_TYPE_AND_AXIS[winStyleId] || [];
 
-    return {
-      name: job.name,
-      reason,
-      fitScore,
-      typeBonus,
-      inputJobBonus,
-    };
-  });
+  const scene1Template = templates.find((t) => t.axis === top1);
+  const scene2Template = templates.find((t) => t.axis === top2);
+  const fixedScene = TYPE_FIXED_SCENE[winStyleId];
 
-  // ソート: fitScore降順 → typeBonus降順 → inputJobBonus降順 → マスタ定義順
-  scored.sort((a, b) => {
-    if (b.fitScore !== a.fitScore) return b.fitScore - a.fitScore;
-    if (b.typeBonus !== a.typeBonus) return b.typeBonus - a.typeBonus;
-    if (b.inputJobBonus !== a.inputJobBonus) return b.inputJobBonus - a.inputJobBonus;
-    return 0; // マスタ定義順を維持
-  });
+  const scene1: BestScene = scene1Template
+    ? { title: scene1Template.title, reason: scene1Template.reason, sourceAxis: top1 }
+    : { title: "チームで成果を出す場面", reason: "あなたの強みが最大限に活きる。" };
 
-  // 上位3件を返す
-  const top3 = scored.slice(0, 3).map((s) => ({
-    name: s.name,
-    reason: s.reason,
-    fitScore: Math.round(s.fitScore),
-  }));
+  const scene2: BestScene = scene2Template
+    ? { title: scene2Template.title, reason: scene2Template.reason, sourceAxis: top2 }
+    : { title: "新しい挑戦が求められる場面", reason: "あなたの強みが力を発揮する。" };
 
-  return top3 as [SuitableJob, SuitableJob, SuitableJob];
+  const scene3: BestScene = {
+    title: fixedScene.title,
+    reason: fixedScene.reason,
+  };
+
+  return [scene1, scene2, scene3];
 }
 
 // ------------------------------------------
@@ -522,7 +514,7 @@ export function calculateFullResult(
   const showPercentile = percentileRank <= 50;
 
   // 向いている職種 (v2 正式実装)
-  const suitableJobs = calculateSuitableJobs(normalized, winStyleId, profile.job as JobCategory);
+  const bestScenes = calculateBestScenes(normalized, winStyleId);
 
   // ポテンシャル戦闘力 (v2 正式実装)
   const potentialBattlePower = calculatePotentialBattlePower(
@@ -548,7 +540,7 @@ export function calculateFullResult(
     reliabilityMessage,
     percentileRank,
     showPercentile,
-    suitableJobs,
+    bestScenes,
     potentialBattlePower,
     strongestAxis: { key: strongest[0], label: AXIS_LABELS[strongest[0]], score: strongest[1] },
     weakestAxis: { key: weakest[0], label: AXIS_LABELS[weakest[0]], score: weakest[1] },

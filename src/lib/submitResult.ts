@@ -35,9 +35,9 @@ export async function submitResultToSheet(
     E: result.normalizedScores.E,
     reliability: result.reliability,
     percentile: result.showPercentile ? result.percentileRank : "非表示",
-    job1: result.suitableJobs[0]?.name || "",
-    job2: result.suitableJobs[1]?.name || "",
-    job3: result.suitableJobs[2]?.name || "",
+    job1: result.bestScenes[0]?.title || "",
+    job2: result.bestScenes[1]?.title || "",
+    job3: result.bestScenes[2]?.title || "",
     potentialPower: result.potentialBattlePower.potential,
     barnumSensitivity: result.barnumSensitivity,
   };

@@ -126,12 +126,12 @@ export interface AxisScores {
   E: number;
 }
 
-// --- 向いている職種 (requirements_v2.md §11-2b) ---
+// --- 勝ち筋が活きる場面 ---
 
-export interface SuitableJob {
-  name: string;
-  reason: string;
-  fitScore: number;
+export interface BestScene {
+  title: string;    // 場面タイトル（例：「方向性が決まらないチームをまとめるとき」）
+  reason: string;   // なぜあなたに合うか（タイプ×軸の根拠）
+  sourceAxis?: AxisKey; // 紐づく上位軸（3つ目はタイプ固有でnull）
 }
 
 // --- ポテンシャル戦闘力 (requirements_v2.md §11-2c) ---
@@ -161,7 +161,7 @@ export interface DiagnosisResult {
   reliabilityMessage: string;
   percentileRank: number;        // 同年代上位%
   showPercentile: boolean;       // 50%以下のみ表示 (requirements_v2.md §10-2)
-  suitableJobs: [SuitableJob, SuitableJob, SuitableJob]; // 向いている職種3つ
+  bestScenes: [BestScene, BestScene, BestScene]; // 勝ち筋が活きる場面3つ
   potentialBattlePower: PotentialBattlePower;             // ポテンシャル戦闘力
   strongestAxis: { key: AxisKey; label: string; score: number };
   weakestAxis: { key: AxisKey; label: string; score: number };

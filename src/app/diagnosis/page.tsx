@@ -3,6 +3,7 @@
 import { useDiagnosis } from "@/lib/diagnosisContext";
 import { buildQuestionSet } from "@/data/questions";
 import { calculateFullResult, calculateInterimPower } from "@/lib/engine";
+import { submitResultToSheet } from "@/lib/submitResult";
 import ProfileForm from "@/components/ProfileForm";
 import ChoiceQuestion from "@/components/ChoiceQuestion";
 import SliderQuestion from "@/components/SliderQuestion";
@@ -83,6 +84,8 @@ export default function DiagnosisPage() {
         const fullResult = calculateFullResult(updatedAnswers, profile!, questions);
         setResult(fullResult);
         setPhase("analyzing");
+        // バックグラウンドでスプレッドシートに送信（結果表示をブロックしない）
+        submitResultToSheet(fullResult, profile!);
         return;
       }
 

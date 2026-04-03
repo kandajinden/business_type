@@ -29,14 +29,13 @@ export const BUTSUCHAKE_QUESTIONS: Question[] = [
   },
   {
     id: "Q28", number: 28, type: "choice", category: "butsuchake", progressWeight: 2.5,
-    text: "次の文章を読んで、「自分のことだ」と感じる度合いは？",
-    subtext:
-      '「あなたは飲み会では盛り上げ役になれるけど、帰り道はいつも1人で考え事をしている。"もっとやれるはずだ"という感覚があるけど、それを職場で口に出すのはちょっと恥ずかしい。」',
+    noAxisScore: true,
+    text: 'ぶっちゃけ、今の自分の"評価"に納得してる？',
     options: [
-      { label: "A", text: "めちゃくちゃ当たってる", scores: {} },
-      { label: "B", text: "だいたい当たってる", scores: {} },
-      { label: "C", text: "半分くらいかな", scores: {} },
-      { label: "D", text: "あんまりピンとこない", scores: {} },
+      { label: "A", text: "正直、もっと評価されていいと思ってる", scores: {} },
+      { label: "B", text: "まあ妥当かな。実力相応だと思う", scores: {} },
+      { label: "C", text: "評価より自分の成長のほうが大事", scores: {} },
+      { label: "D", text: "考えたことない。目の前の仕事に集中してる", scores: {} },
     ],
   },
   {

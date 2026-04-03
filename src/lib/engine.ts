@@ -527,8 +527,8 @@ export function calculateFullResult(
   const strongest = axisEntries[0];
   const weakest = axisEntries[axisEntries.length - 1];
 
-  // barnumSensitivity: v2では4択 (A/B/C/D) のみ。Eは廃止
-  const validBarnum = (q28 === "A" || q28 === "B" || q28 === "C" || q28 === "D") ? q28 : "C";
+  // Q28: 自己評価への納得度（ポテンシャル戦闘力のパーソナライズに使用）
+  const validQ28 = (q28 === "A" || q28 === "B" || q28 === "C" || q28 === "D") ? q28 : "C";
 
   return {
     axisScores: raw,
@@ -544,7 +544,7 @@ export function calculateFullResult(
     potentialBattlePower,
     strongestAxis: { key: strongest[0], label: AXIS_LABELS[strongest[0]], score: strongest[1] },
     weakestAxis: { key: weakest[0], label: AXIS_LABELS[weakest[0]], score: weakest[1] },
-    barnumSensitivity: validBarnum,
+    q28Evaluation: validQ28,
     contradictionCount,
   };
 }

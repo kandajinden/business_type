@@ -18,10 +18,15 @@ const RANK_DISTRIBUTION = [
   { id: "awakening", name: "原石", percent: 5 },
 ];
 
+// Q28回答別のポテンシャル戦闘力パーソナライズメッセージ
+const Q28_MESSAGES: Record<string, string> = {
+  A: "あなたの力はまだ正しく発揮されていない。勝ち筋を磨けば、評価は必ずついてくる。",
+  B: "自分を客観的に見れている。ここからの伸びしろを活かせば、さらに上のステージへ。",
+  C: "成長志向があるからこそ、正しい方向に努力すれば戦闘力は飛躍的に上がる。",
+  D: "目の前に集中できる力は武器。そこに\"方向性\"が加われば、成果は加速する。",
+};
+
 export default function ResultPage({ result }: Props) {
-  const isHighSensitivity =
-    result.barnumSensitivity === "A" || result.barnumSensitivity === "B";
-  const isLowSensitivity = result.barnumSensitivity === "D";
 
   // ── セクション2: 勝ち筋タイプ ──
   const renderWinStyle = () => (
@@ -29,40 +34,18 @@ export default function ResultPage({ result }: Props) {
       <div className="max-w-md mx-auto text-center">
         <p className="text-sm text-[#555555] mb-2">── あなたの勝ち筋 ──</p>
         <div className="bg-[#2A2A2A] rounded-2xl p-6 mb-4">
-          <h2
-            className={`text-2xl font-bold text-white mb-2 ${
-              isHighSensitivity ? "animate-[fadeIn_0.3s_0.3s_both]" : ""
-            }`}
-          >
+          <h2 className="text-2xl font-bold text-white mb-2">
             {result.winStyle.name}
           </h2>
-          <p
-            className={`text-sm text-[#E84715] mb-4 ${
-              isHighSensitivity ? "animate-[fadeIn_0.3s_0.6s_both]" : ""
-            }`}
-          >
+          <p className="text-sm text-[#E84715] mb-4">
             {result.winStyle.catchcopy}
           </p>
         </div>
 
-        {isLowSensitivity ? (
-          <details className="text-left">
-            <summary className="text-sm text-[#CCCCCC] cursor-pointer mb-2">
-              詳細を見る ▼
-            </summary>
-            <div className="text-sm text-[#CCCCCC] leading-relaxed mb-4">
-              {result.winStyle.description}
-            </div>
-            <WinStyleWeapons weapons={result.winStyle.weapons} />
-          </details>
-        ) : (
-          <>
-            <p className="text-sm text-[#CCCCCC] leading-relaxed text-left mb-4">
-              {result.winStyle.description}
-            </p>
-            <WinStyleWeapons weapons={result.winStyle.weapons} />
-          </>
-        )}
+        <p className="text-sm text-[#CCCCCC] leading-relaxed text-left mb-4">
+          {result.winStyle.description}
+        </p>
+        <WinStyleWeapons weapons={result.winStyle.weapons} />
       </div>
     </section>
   );
@@ -174,18 +157,9 @@ export default function ResultPage({ result }: Props) {
         </p>
       </section>
 
-      {/* ===== セクション2 & 3: 勝ち筋 & チャート (低感受性は順序入替) ===== */}
-      {isLowSensitivity ? (
-        <>
-          {renderChart()}
-          {renderWinStyle()}
-        </>
-      ) : (
-        <>
-          {renderWinStyle()}
-          {renderChart()}
-        </>
-      )}
+      {/* ===== セクション2 & 3: 勝ち筋 → チャート ===== */}
+      {renderWinStyle()}
+      {renderChart()}
 
       {/* ===== セクション4: この勝ち筋が活きる場面 ===== */}
       <section className="section-white py-12 px-4 border-t border-[#E0E0E0]">
@@ -219,9 +193,12 @@ export default function ResultPage({ result }: Props) {
           <p className="text-sm text-[#555555] text-center mb-2">
             ── ポテンシャル戦闘力 ──
           </p>
-          <h3 className="text-lg font-bold text-[#1A1A1A] text-center mb-6">
+          <h3 className="text-lg font-bold text-[#1A1A1A] text-center mb-2">
             あなたの戦闘力、まだ伸びる。
           </h3>
+          <p className="text-sm text-[#E84715] text-center mb-6">
+            {Q28_MESSAGES[result.q28Evaluation] || Q28_MESSAGES.C}
+          </p>
 
           {/* 現在→ポテンシャル */}
           <div className="text-center mb-6">
@@ -296,11 +273,6 @@ export default function ResultPage({ result }: Props) {
             </span>
           </div>
           <p className="text-xs text-[#555555]">{result.reliabilityMessage}</p>
-          {isLowSensitivity && (
-            <p className="text-xs text-[#999999] mt-1">
-              矛盾ペア数：{result.contradictionCount}/10
-            </p>
-          )}
         </div>
       </section>
 

@@ -39,7 +39,7 @@ export async function submitResultToSheet(
     job2: result.bestScenes[1]?.title || "",
     job3: result.bestScenes[2]?.title || "",
     potentialPower: result.potentialBattlePower.potential,
-    barnumSensitivity: result.barnumSensitivity,
+    q28Evaluation: result.q28Evaluation,
   };
 
   try {

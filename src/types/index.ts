@@ -165,8 +165,8 @@ export interface DiagnosisResult {
   potentialBattlePower: PotentialBattlePower;             // ポテンシャル戦闘力
   strongestAxis: { key: AxisKey; label: string; score: number };
   weakestAxis: { key: AxisKey; label: string; score: number };
-  barnumSensitivity: "A" | "B" | "C" | "D";  // v2: 4択化 (E廃止)
-  contradictionCount: number;                 // 矛盾ペア数 (低感受性表示用)
+  q28Evaluation: "A" | "B" | "C" | "D";  // Q28：自己評価への納得度
+  contradictionCount: number;             // 矛盾ペア数
 }
 
 // --- ユーザー入力 ---

@@ -4,95 +4,90 @@ import Link from "next/link";
 
 // ランク分布データ（design.md §9 / requirements_v2.md §12-2b）
 const RANK_DISTRIBUTION = [
-  { name: "伝説", percent: 2, scoreRange: "1,000,000〜" },
-  { name: "覇者", percent: 11, scoreRange: "300,000〜" },
-  { name: "猛者", percent: 22, scoreRange: "100,000〜" },
-  { name: "実戦派", percent: 40, scoreRange: "30,000〜" },
-  { name: "挑戦者", percent: 20, scoreRange: "10,000〜" },
+  { name: "伝説", percent: 2, scoreRange: "100万〜" },
+  { name: "覇者", percent: 11, scoreRange: "30万〜" },
+  { name: "猛者", percent: 22, scoreRange: "10万〜" },
+  { name: "実戦派", percent: 40, scoreRange: "3万〜" },
+  { name: "挑戦者", percent: 20, scoreRange: "1万〜" },
   { name: "原石", percent: 5, scoreRange: "5,000〜" },
 ];
 
-
 export default function LandingPage() {
   return (
-    <div className="pb-24">
-      {/* ===== セクション1: ファーストビュー (design.md §9) ===== */}
-      <section className="section-white min-h-[80vh] flex flex-col items-center justify-center px-4 text-center">
-        <p className="text-sm font-bold tracking-widest text-[#1A1A1A] mb-1">
+    <div className="pb-20">
+      {/* ===== ファーストビュー ===== */}
+      <section className="flex flex-col items-center justify-center px-6 pt-12 pb-8 text-center">
+        <p className="text-xs font-bold tracking-[0.2em] text-[#E84715] mb-1">
           CAREER SCOUTER
         </p>
-        <p className="text-xs text-[#555555] mb-8">
+        <p className="text-[11px] text-[#555555] mb-6">
           ── 自分だけの勝ち筋を、知れ。──
         </p>
-        <h1 className="text-2xl md:text-3xl font-bold text-[#1A1A1A] leading-tight mb-4">
+
+        <h1 className="text-[22px] font-bold text-[#1A1A1A] leading-[1.6] mb-3">
           30問の質問から、
           <br />
           あなたのキャリア戦闘力を計測。
         </h1>
-        <p className="text-sm text-[#555555]">
+        <p className="text-[13px] text-[#555555] leading-relaxed">
           戦闘力スコア × 勝ち筋タイプ
           <br />
           ── あなただけの結果を。
         </p>
       </section>
 
-      {/* ===== セクション2: 2ndビュー - ランク分布 (design.md §9, requirements_v2.md §12-2b) ===== */}
-      <section className="section-white py-12 px-4">
-        <div className="max-w-md mx-auto">
-          <p className="text-lg font-bold text-[#1A1A1A] text-center mb-6">
+      {/* ===== 区切り線 ===== */}
+      <div className="w-12 h-[1px] bg-[#E0E0E0] mx-auto" />
+
+      {/* ===== ランク分布 ===== */}
+      <section className="px-6 pt-8 pb-10">
+        <div className="max-w-sm mx-auto">
+          <p className="text-base font-bold text-[#1A1A1A] text-center mb-5">
             ── あなたはどのランク？ ──
           </p>
 
-          {/* ランク分布棒グラフ */}
-          <div className="space-y-3 mb-8">
+          {/* 棒グラフ */}
+          <div className="space-y-2.5 mb-6">
             {RANK_DISTRIBUTION.map((rank) => (
-              <div key={rank.name} className="flex items-center gap-2 text-sm">
-                <span className="w-[5.5rem] text-right text-[#1A1A1A] font-bold flex-shrink-0">
+              <div key={rank.name} className="flex items-center gap-1.5 text-[13px]">
+                <span className="w-[4rem] text-right text-[#1A1A1A] font-bold flex-shrink-0">
                   {rank.name}
                 </span>
-                <div className="flex-1 flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-1.5">
                   <div
                     className="rank-bar"
                     style={{ width: `${(rank.percent / 40) * 100}%` }}
                   />
-                  <span className="text-xs text-[#555555] whitespace-nowrap">
+                  <span className="text-[11px] text-[#555555]">
                     {rank.percent}%
                   </span>
                 </div>
-                <span className="text-xs text-[#999999] w-[5.5rem] text-right flex-shrink-0">
+                <span className="text-[11px] text-[#999999] w-[3.5rem] text-right flex-shrink-0">
                   {rank.scoreRange}
                 </span>
               </div>
             ))}
           </div>
 
-          <p className="text-center text-sm text-[#1A1A1A] font-bold leading-relaxed mb-10">
+          <p className="text-center text-[13px] text-[#1A1A1A] font-bold leading-[1.8]">
             ビジネスパーソンの上位2%は
             <br />
             戦闘力が{" "}
-            <span className="power-number text-lg">100万</span>を超える。
+            <span className="power-number text-base">100万</span>を超える。
             <br />
             あなたの戦闘力は？
-          </p>
-
-          <p className="text-sm text-[#555555] text-center leading-relaxed">
-            あなたの「勝ち筋」と
-            <br />
-            「成果加速マップ」が
-            <br />
-            3分で分かる。
           </p>
         </div>
       </section>
 
-      {/* ===== フローティングCTAバナー (design.md §9, requirements_v2.md §12-3) ===== */}
-      <div className="floating-cta">
+      {/* ===== フローティングCTA ===== */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-white via-white/95 to-transparent">
         <Link
           href="/diagnosis"
-          className="block w-[90%] max-w-md mx-auto bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3 transition-colors"
+          className="block w-[90%] max-w-sm mx-auto bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3.5 transition-colors shadow-lg"
         >
-          <span className="text-xs block">＼ 3分で完了 ／</span>
-          <span className="text-base font-bold">
+          <span className="text-[11px] block mb-0.5">＼ 3分で完了 ／</span>
+          <span className="text-[15px] font-bold">
             【無料】キャリア戦闘力を測定する
           </span>
         </Link>

@@ -401,12 +401,34 @@ export default function ResultPage({ result }: Props) {
         </div>
       </section>
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      {/* ===== フッター ===== */}
+      <footer className="bg-[#111111] py-8 px-4">
+        <div className="max-w-md mx-auto text-center">
+          <div className="flex justify-center gap-4 mb-4 text-[11px]">
+            <a href="https://mizukara.com/about" target="_blank" rel="noopener noreferrer" className="text-[#999999] hover:text-white transition-colors">
+              会社概要
+            </a>
+            <a href="https://mizukara.com/law" target="_blank" rel="noopener noreferrer" className="text-[#999999] hover:text-white transition-colors">
+              特定商取引法上の表記
+            </a>
+            <a href="https://mizukara.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#999999] hover:text-white transition-colors">
+              プライバシーポリシー
+            </a>
+            <a href="https://mizukara.com/contact-service" target="_blank" rel="noopener noreferrer" className="text-[#999999] hover:text-white transition-colors">
+              お問い合わせ
+            </a>
+          </div>
+          <p className="text-[10px] text-[#555555] mb-2">
+            掲載の情報・画像など、すべてのコンテンツの無断複写・転載を禁じます。
+          </p>
+          <p className="text-[10px] text-[#555555] mb-2">
+            東京都千代田区内幸町2丁目2番3号 日比谷国際ビル610
+          </p>
+          <p className="text-[10px] text-[#555555]">
+            &copy; 2026 株式会社ミズカラ. All Rights Reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

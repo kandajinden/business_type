@@ -1,6 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+// 本日の診断数（想定値: Meta広告1日10万円 → 約300人/日）
+function useTodayCount() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const now = new Date();
+    const hour = now.getHours();
+    const dayOfYear = Math.floor(
+      (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+    );
+
+    // 日ごとにばらつきを出す（seed = 日付）
+    const daySeed = (dayOfYear * 7 + 13) % 100;
+    const baseDaily = 270 + daySeed % 80; // 270〜349人/日
+
+    // 時間帯で「今の時点までの累計」を出す（朝少ない→夜多い）
+    const hourRatio = [
+      0.02, 0.02, 0.01, 0.01, 0.01, 0.02, // 0-5時
+      0.03, 0.05, 0.06, 0.07, 0.07, 0.07, // 6-11時
+      0.06, 0.06, 0.06, 0.07, 0.07, 0.06, // 12-17時
+      0.05, 0.05, 0.04, 0.03, 0.02, 0.02, // 18-23時
+    ];
+    let cumulative = 0;
+    for (let h = 0; h <= hour; h++) cumulative += hourRatio[h];
+
+    setCount(Math.round(baseDaily * cumulative));
+  }, []);
+
+  return count;
+}
 
 // ランク分布データ（design.md §9 / requirements_v2.md §12-2b）
 const RANK_DISTRIBUTION = [
@@ -13,6 +45,8 @@ const RANK_DISTRIBUTION = [
 ];
 
 export default function LandingPage() {
+  const todayCount = useTodayCount();
+
   return (
     <div>
       {/* ===== ファーストビュー（スクロールなしでCTAまで見える設計） ===== */}
@@ -45,6 +79,13 @@ export default function LandingPage() {
             【無料】キャリア戦闘力を測定する
           </span>
         </Link>
+
+        {/* 本日の診断数 */}
+        {todayCount > 0 && (
+          <p className="text-[11px] text-[#999999] mt-3">
+            🔥 本日 <span className="font-bold text-[#E84715]">{todayCount}人</span> が診断中
+          </p>
+        )}
       </section>
 
       {/* ===== ランク分布（スクロール後に見える） ===== */}

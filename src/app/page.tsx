@@ -14,33 +14,41 @@ const RANK_DISTRIBUTION = [
 
 export default function LandingPage() {
   return (
-    <div className="pb-20">
-      {/* ===== ファーストビュー ===== */}
-      <section className="flex flex-col items-center justify-center px-6 pt-12 pb-8 text-center">
+    <div>
+      {/* ===== ファーストビュー（スクロールなしでCTAまで見える設計） ===== */}
+      <section className="min-h-[calc(100svh-56px)] flex flex-col items-center justify-center px-6 text-center">
         <p className="text-xs font-bold tracking-[0.2em] text-[#E84715] mb-1">
           CAREER SCOUTER
         </p>
-        <p className="text-[11px] text-[#555555] mb-6">
+        <p className="text-[11px] text-[#555555] mb-5">
           ── 自分だけの勝ち筋を、知れ。──
         </p>
 
-        <h1 className="text-[22px] font-bold text-[#1A1A1A] leading-[1.6] mb-3">
+        <h1 className="text-[22px] font-bold text-[#1A1A1A] leading-[1.6] mb-2">
           30問の質問から、
           <br />
           あなたのキャリア戦闘力を計測。
         </h1>
-        <p className="text-[13px] text-[#555555] leading-relaxed">
+        <p className="text-[13px] text-[#555555] leading-relaxed mb-6">
           戦闘力スコア × 勝ち筋タイプ
           <br />
           ── あなただけの結果を。
         </p>
+
+        {/* CTAボタン（ファーストビュー内に配置） */}
+        <Link
+          href="/diagnosis"
+          className="w-[85%] max-w-xs bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3.5 transition-colors shadow-lg block"
+        >
+          <span className="text-[11px] block mb-0.5">＼ 3分で完了 ／</span>
+          <span className="text-[15px] font-bold">
+            【無料】キャリア戦闘力を測定する
+          </span>
+        </Link>
       </section>
 
-      {/* ===== 区切り線 ===== */}
-      <div className="w-12 h-[1px] bg-[#E0E0E0] mx-auto" />
-
-      {/* ===== ランク分布 ===== */}
-      <section className="px-6 pt-8 pb-10">
+      {/* ===== ランク分布（スクロール後に見える） ===== */}
+      <section className="px-6 py-10 border-t border-[#E0E0E0]">
         <div className="max-w-sm mx-auto">
           <p className="text-base font-bold text-[#1A1A1A] text-center mb-5">
             ── あなたはどのランク？ ──
@@ -69,7 +77,7 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <p className="text-center text-[13px] text-[#1A1A1A] font-bold leading-[1.8]">
+          <p className="text-center text-[13px] text-[#1A1A1A] font-bold leading-[1.8] mb-6">
             ビジネスパーソンの上位2%は
             <br />
             戦闘力が{" "}
@@ -77,21 +85,18 @@ export default function LandingPage() {
             <br />
             あなたの戦闘力は？
           </p>
+
+          {/* 2つ目のCTA（スクロール後用） */}
+          <Link
+            href="/diagnosis"
+            className="block w-[85%] max-w-xs mx-auto bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3.5 transition-colors shadow-lg"
+          >
+            <span className="text-[15px] font-bold">
+              キャリア戦闘力を測定する
+            </span>
+          </Link>
         </div>
       </section>
-
-      {/* ===== フローティングCTA ===== */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 p-3 bg-gradient-to-t from-white via-white/95 to-transparent">
-        <Link
-          href="/diagnosis"
-          className="block w-[90%] max-w-sm mx-auto bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3.5 transition-colors shadow-lg"
-        >
-          <span className="text-[11px] block mb-0.5">＼ 3分で完了 ／</span>
-          <span className="text-[15px] font-bold">
-            【無料】キャリア戦闘力を測定する
-          </span>
-        </Link>
-      </div>
     </div>
   );
 }

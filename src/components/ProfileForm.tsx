@@ -25,8 +25,11 @@ export default function ProfileForm({ onSubmit }: Props) {
         <h1 className="text-xl font-bold text-[#1A1A1A] text-center mb-2">
           基本情報を入力
         </h1>
-        <p className="text-sm text-[#555555] text-center mb-8">
+        <p className="text-sm text-[#555555] text-center mb-2">
           あなたに合った質問を出すために使います
+        </p>
+        <p className="text-xs text-[#999999] text-center mb-8">
+          ※ あなたに合った結果を出すためだけに使います。個人情報として保存されることはありません。
         </p>
 
         {/* 年齢 */}

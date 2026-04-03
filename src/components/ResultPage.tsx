@@ -26,6 +26,8 @@ const Q28_MESSAGES: Record<string, string> = {
   D: "目の前に集中できる力は武器。そこに\"方向性\"が加われば、成果は加速する。",
 };
 
+const basePath = process.env.NODE_ENV === "production" ? "/business_type" : "";
+
 export default function ResultPage({ result }: Props) {
 
   // ── セクション2: 勝ち筋タイプ ──
@@ -319,142 +321,77 @@ export default function ResultPage({ result }: Props) {
             <span className="text-[#E84715] font-bold">7つの質問ワークシート</span>を用意しました。
           </p>
 
-          {/* ─── 7つの質問ワーク紹介 ─── */}
-          <div className="bg-gradient-to-b from-[#8B0000] to-[#1A1A1A] rounded-2xl p-6 mb-6">
-            <p className="text-[11px] text-[#CCCCCC] mb-1">突き抜けるための</p>
-            <h4 className="text-xl font-bold text-white mb-2">
-              本気で突き抜けるための
-              <br />
-              <span className="text-[#E84715]">7つの質問</span>
-            </h4>
-            <p className="text-xs text-[#CCCCCC] mb-5">
-              最短最速で突き抜けるために
-              <br />
-              今必要な問いを用意しました。
-            </p>
-
-            <p className="text-xs text-[#E84715] font-bold mb-3">
-              ── ワークの一部を公開 ──
-            </p>
-            <div className="space-y-2.5 mb-2">
-              {[
-                "もし今の延長線を全て捨てるとしたら？",
-                "あなたが最高出力を出せる「トリガー」は？",
-                "具体的かつ熱狂・没頭できる○○は？",
-              ].map((q, i) => (
-                <div
-                  key={i}
-                  className="bg-white/10 rounded-lg py-2.5 px-4"
-                >
-                  <p className="text-sm text-white font-bold">{q}</p>
-                </div>
-              ))}
-            </div>
+          {/* ─── ワークシート冊子画像 ─── */}
+          <div className="mb-6">
+            <img
+              src={`${basePath}/images/worksheet.png`}
+              alt="「普通の人生」で終わらせない。本気で突き抜けるための7つの質問ワークシート"
+              className="w-full rounded-lg"
+            />
           </div>
 
-          {/* ─── CTAボタン ─── */}
+          {/* ─── CTAボタン1 ─── */}
           <button className="btn-line w-full py-4 mb-8">
             【無料】自分だけの勝ち筋を見つける
             <br />
             7つの質問ワークを受け取る
           </button>
 
+          {/* ─── 7つの質問ワーク詳細 ─── */}
+          <div className="mb-8">
+            <img
+              src={`${basePath}/images/work-detail.png`}
+              alt="本気で突き抜けるための7つの質問 ワークの一部を公開"
+              className="w-full rounded-lg"
+            />
+          </div>
+
           {/* ─── 書籍の権威性 ─── */}
-          <div className="bg-[#2A2A2A] rounded-2xl p-6 mb-8 text-left">
-            <p className="text-xs text-[#CCCCCC] text-center mb-2">
-              株式会社ミズカラ 代表取締役CEO
-            </p>
-            <p className="text-base font-bold text-white text-center mb-3">
-              初著書『自分の変え方』
-            </p>
-            <div className="flex justify-center gap-4 mb-4">
-              <div className="text-center">
-                <p className="text-xs text-[#CCCCCC]">Amazon</p>
-                <p className="text-lg font-bold text-[#E84715]">総合1位</p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs text-[#CCCCCC]">Amazon</p>
-                <p className="text-lg font-bold text-[#E84715]">7冠達成</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-1 text-center text-[10px] text-[#999999]">
-              <p>ビジネス1位</p>
-              <p>リーダーシップ1位</p>
-              <p>ビジネス実用1位</p>
-            </div>
-            <p className="text-xs text-[#CCCCCC] text-center mt-4">
-              ダウンロード<span className="text-[#E84715] font-bold">5,000円相当</span>の限定特典も
-            </p>
+          <div className="mb-8">
+            <img
+              src={`${basePath}/images/book-authority.png`}
+              alt="初書籍『自分の変え方』Amazon 総合1位 / 7冠達成"
+              className="w-full rounded-lg"
+            />
+          </div>
+
+          {/* ─── CTAバナー ─── */}
+          <div className="mb-8">
+            <img
+              src={`${basePath}/images/cta-banner.png`}
+              alt="今だけ 最短最速で人生を突き抜ける。無料でワークシートを受け取る"
+              className="w-full rounded-lg cursor-pointer"
+            />
+          </div>
+
+          {/* ─── ミズカラ紹介 + チーム写真 ─── */}
+          <div className="mb-6">
+            <img
+              src={`${basePath}/images/team.png`}
+              alt="このワークシートを開発した株式会社ミズカラとは"
+              className="w-full rounded-lg"
+            />
+          </div>
+
+          {/* ─── 会社情報テーブル ─── */}
+          <div className="mb-8">
+            <img
+              src={`${basePath}/images/company-table.png`}
+              alt="株式会社ミズカラ 会社概要"
+              className="w-full rounded-lg"
+            />
           </div>
 
           {/* ─── 導入企業 ─── */}
           <div className="mb-8">
-            <p className="text-xs text-[#E84715] font-bold mb-4">
-              ── 実際に変容を起こした企業様 ──
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                "NTTドコモ 様",
-                "埼玉西武ライオンズ 様",
-                "ショップジャパン 様",
-                "西野亮廣 様",
-              ].map((name) => (
-                <div
-                  key={name}
-                  className="bg-[#2A2A2A] rounded-lg py-3 px-2"
-                >
-                  <p className="text-xs text-white font-bold">{name}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ─── ミズカラ紹介 ─── */}
-          <div className="bg-[#2A2A2A] rounded-2xl p-6 mb-8 text-center">
-            <p className="text-xs text-[#E84715] font-bold mb-2">
-              このワークシートを開発した
-            </p>
-            <p className="text-base font-bold text-white mb-4">
-              株式会社ミズカラとは
-            </p>
-            <p className="text-sm text-[#CCCCCC] leading-relaxed mb-4">
-              <span className="text-[#E84715] font-bold">&quot;すべての人に可能性がある&quot;</span>
-              <br />
-              という理念のもと、
-              <br />
-              個人向けコーチング「キャリスピ」と
-              <br />
-              企業向けの組織コーチングを
-              <br />
-              提供しています。
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-[11px] text-left">
-              <div>
-                <p className="text-[#999999]">設立</p>
-                <p className="text-white">2019年7月</p>
-              </div>
-              <div>
-                <p className="text-[#999999]">資本金</p>
-                <p className="text-white">1,000万円</p>
-              </div>
-              <div>
-                <p className="text-[#999999]">メンバー</p>
-                <p className="text-white">200名</p>
-              </div>
-              <div>
-                <p className="text-[#999999]">代表取締役</p>
-                <p className="text-white">山宮 健太朗</p>
-              </div>
-            </div>
+            <img
+              src={`${basePath}/images/clients.png`}
+              alt="実際に変容を起こした企業様 docomo 埼玉西武ライオンズ ショップジャパン 西野亮廣"
+              className="w-full rounded-lg"
+            />
           </div>
 
           {/* ─── 最終CTA ─── */}
-          <p className="text-sm text-[#E84715] font-bold mb-2">
-            今だけ
-          </p>
-          <p className="text-base font-bold text-white mb-4">
-            最短最速で人生を突き抜ける。
-          </p>
           <button className="btn-line w-full py-4 mb-3">
             無料でワークシートを受け取る →
           </button>

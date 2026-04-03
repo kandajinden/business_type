@@ -79,7 +79,7 @@ export default function LandingPage() {
             ビジネスパーソンの上位2%は
             <br />
             戦闘力が{" "}
-            <span className="power-number text-lg">1,000,000</span> を超える。
+            <span className="power-number text-lg">100万</span>を超える。
             <br />
             あなたの戦闘力は？
           </p>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "無料・3分で完了。あなたのキャリア戦闘力を測定し、8タイプの勝ち筋から「あなたの成果の出し方」を特定。",
   openGraph: {
-    title: "お前の勝ち筋、知ってるか？",
+    title: "あなたの勝ち筋、知ってるか？",
     description:
       "無料・3分で完了。あなたのキャリア戦闘力を測定し、8タイプの勝ち筋から「あなたの成果の出し方」を特定。",
     type: "website",

@@ -91,8 +91,9 @@ export default function LandingPage() {
             href="/diagnosis"
             className="block w-[85%] max-w-xs mx-auto bg-[#E84715] hover:bg-[#D03D12] text-white text-center rounded-lg py-3.5 transition-colors shadow-lg"
           >
+            <span className="text-[11px] block mb-0.5">＼ 3分で完了 ／</span>
             <span className="text-[15px] font-bold">
-              キャリア戦闘力を測定する
+              【無料】キャリア戦闘力を測定する
             </span>
           </Link>
         </div>

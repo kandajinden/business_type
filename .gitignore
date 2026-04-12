@@ -1,7 +1,25 @@
+# --- 秘密情報（2026-04-12 追加） ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*credentials*
+*secret*
+*.token
+.dev.vars
+
+# --- OS ---
+.DS_Store
+
+# --- Next.js ---
 .next/
 node_modules/
 out/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
-out/
+
+# --- ログ ---
+*.log
+logs/
